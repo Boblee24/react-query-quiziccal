@@ -1,0 +1,85 @@
+body{
+    margin: 0;
+    padding: 0;
+    background: #F5F7FB;
+    font-family: 'Karla', sans-serif;
+}
+
+/* .wrapper {
+    display: flex;
+
+    
+} */
+.section1 {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    height: 100vh;
+    flex-direction: column;
+}
+.section2 {
+    margin: 30px 50px;
+}
+h1{
+    font-weight:700;
+    font-size: 32px;
+    color: #293264;
+}
+h3{
+    color: #293264;
+    font-size: 16px;
+    font-family: 'Inter', sans-serif;
+}
+button.welcome_button {
+    background: #4D5B9E;
+    border-radius: 16px;
+    width: 150px;
+    font-family: 'Inter', sans-serif;
+    padding: 10px 0;
+    /* outline: none; */
+    /* appearance: none; */
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color:#F5F7FB;
+}
+.selected {
+    background-color: #D6DBF5;
+}
+.wrongoption{
+    background-color: #F8BCBC;
+    opacity: .6;
+}
+.opacity {
+    opacity: .6;
+    /* background-color: yellow; */
+}
+.correct{
+    background-color: #94D7A2;
+    opacity: 1;
+}
+.welcome {
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px;
+}
+.box_for_options{
+    display: flex;
+    gap: 20px;
+}
+span{
+    margin: 20px;
+}
+button{
+    background: yellow;
+    border: 1px solid #4D5B9E;
+    outline: none;
+    appearance: none;
+    padding: 5px 15px;
+    border-radius: 10px;
+    color: #293264;
+    background: none;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+}
