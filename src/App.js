@@ -30,7 +30,7 @@ function App() {
   };
 
   function fetchData(){
-    fetch("https://opentdb.com/api.php?amount=5")
+    fetch("https://opentdb.com/api.php?amount=10")
     .then(res => res.json())
     .then(data => {
       const extractedQuestion = data.results.map((question) => {
@@ -48,7 +48,7 @@ function App() {
     })
   }
   React.useEffect( () => {
-    fetch("https://opentdb.com/api.php?amount=5")
+    fetch("https://opentdb.com/api.php?amount=10")
     .then(res => res.json())
     .then(data => {
       const extractedQuestion = data.results.map((question) => {
