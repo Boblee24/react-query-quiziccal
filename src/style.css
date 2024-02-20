@@ -19,7 +19,8 @@ body{
     flex-direction: column;
 }
 .section2 {
-    margin: 30px 50px;
+    margin: 30px 40px;
+    /* margin-top: 2.9rem; */
 }
 h1{
     font-weight:700;
@@ -63,6 +64,10 @@ button.welcome_button {
     display: flex;
     justify-content: flex-end;
     margin: 20px;
+    /* margin-top: 4rem; */
+}
+.bag{
+    margin-top: 3.9rem;
 }
 .box_for_options{
     display: flex;
@@ -82,4 +87,14 @@ button{
     background: none;
     font-weight: 500;
     font-family: 'Inter', sans-serif;
+}
+.header{
+    position: fixed;
+    top:-1.5rem;
+    padding: .5rem;
+    width: 100%;
+    background: #4d5b9e41;
+    backdrop-filter: blur(10px);
+    z-index: 10;
+    -webkit-backdrop-filter: blur(10px);
 }
