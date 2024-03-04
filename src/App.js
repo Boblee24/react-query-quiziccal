@@ -6,22 +6,20 @@ import "./style.css";
 import { decode } from "html-entities";
 import { nanoid } from "nanoid";
 import Header from "./components/Header";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
 
 decode("&lt; &gt; &quot; &apos; &amp; &#169; &#8710;");
 
 function App() {
-  // const [quizData, setQuizData] = React.useState([])
+  const client = new QueryClient()
   const [firstPage, setFirstPage] = React.useState(false);
-  // const [selectedAnswers, setSelectedAnswers] = React.useState({});
   const [question, setQuestion] = React.useState([]);
-  // const [questionsAndAnswers, setQuestionsAndAnswers] = React.useState([]);
   const [showResult, setShowResult] = React.useState(false);
 
   const [numOfCorrectAnswer, setNumOfCorrectAnswer] = React.useState(0);
 
   //Shuffling array
   const shuffle = (array) => {
-    // Implement your preferred shuffling algorithm here
     // Fisher-Yates shuffle
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -68,7 +66,6 @@ function App() {
             selectedAnswer: "",
           };
         });
-        // setQuizData(data.results)
         setQuestion(extractedQuestion);
       });
   }, []);
@@ -94,18 +91,8 @@ function App() {
     setShowResult(false);
     setNumOfCorrectAnswer(0);
     fetchData();
-
     // setQuestion([])
   }
-  // console.log(question)
-
-  // const handleAnswerChange = (questionId, selectedAnswer) => {
-  //   setSelectedAnswers((prevSelectedAnswers) => ({
-  //     ...prevSelectedAnswers,
-  //     [questionId]: selectedAnswer,
-  //   }));
-  // };
-  // console.log(selectedAnswers)
 
   function updateAnswer(currentQuestion, answer) {
     setQuestion(
@@ -157,16 +144,15 @@ function App() {
   function changePage() {
     setFirstPage(true);
   }
-
   return (
     <div className="wrapper">
+      <QueryClientProvider>
       <div className="container">
         <Header/>
         {firstPage ? createQuiz() : <Main changePage={changePage} />}
       </div>
+    </QueryClientProvider>
     </div>
-    //My name is aborisade ayomiposi emmnauel
   );
 }
-
 export default App;
