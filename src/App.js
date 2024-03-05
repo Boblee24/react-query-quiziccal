@@ -6,19 +6,26 @@ import "./style.css";
 import { decode } from "html-entities";
 import { nanoid } from "nanoid";
 import Header from "./components/Header";
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query"
+import Axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 decode("&lt; &gt; &quot; &apos; &amp; &#169; &#8710;");
 
 function App() {
-  const client = new QueryClient()
   const [firstPage, setFirstPage] = React.useState(false);
-  const [question, setQuestion] = React.useState([]);
+  // const [question, setQuestion] = React.useState([]);
   const [showResult, setShowResult] = React.useState(false);
 
   const [numOfCorrectAnswer, setNumOfCorrectAnswer] = React.useState(0);
-
-  //Shuffling array
+  const { data, refetch, isLoading } = useQuery({
+    queryKey: ["quiz"],
+    queryFn: () => {
+      return Axios.get("https://opentdb.com/api.php?amount=5").then(
+        (res) => res.data
+      );
+    },
+    
+  });
   const shuffle = (array) => {
     // Fisher-Yates shuffle
     for (let i = array.length - 1; i > 0; i--) {
@@ -27,91 +34,61 @@ function App() {
     }
     return array;
   };
-
-  function fetchData() {
-    fetch("https://opentdb.com/api.php?amount=10")
-      .then((res) => res.json())
-      .then((data) => {
-        const extractedQuestion = data.results.map((question) => {
-          const answer = [
-            ...question.incorrect_answers,
-            question.correct_answer,
-          ];
-          return {
-            id: nanoid(),
-            question: question.question,
-            answers: shuffle(answer),
-            correctAnswer: question.correct_answer,
-            selectedAnswer: "",
-          };
-        });
-        // setQuizData(data.results)
-        setQuestion(extractedQuestion);
-      });
+  if(isLoading) {
+    return data
   }
-  React.useEffect(() => {
-    fetch("https://opentdb.com/api.php?amount=10")
-      .then((res) => res.json())
-      .then((data) => {
-        const extractedQuestion = data.results.map((question) => {
-          const answer = [
-            ...question.incorrect_answers,
-            question.correct_answer,
-          ];
-          return {
-            id: nanoid(),
-            question: question.question,
-            answers: shuffle(answer),
-            correctAnswer: question.correct_answer,
-            selectedAnswer: "",
-          };
-        });
-        setQuestion(extractedQuestion);
-      });
-  }, []);
+  const fetchData = data.results.map((question) => {
+      const answer = [...question.incorrect_answers, question.correct_answer];
+      return {
+        id: nanoid(),
+        key : nanoid(),
+        question: question.question,
+        answers: shuffle(answer),
+        correctAnswer: question.correct_answer,
+        selectedAnswer: "",
+      };
+    });
+    // setQuestion(fetchData)
 
+  // fetchData()
+
+  //Shuffling array
+  
   function numberOfAnswer() {
-    question.forEach((questionObject) => {
+    fetchData.forEach((questionObject) => {
       if (questionObject.selectedAnswer === questionObject.correctAnswer) {
         setNumOfCorrectAnswer((previous) => previous + 1);
       }
     });
   }
-
   //checking answer
-
   function checkanswers() {
     setShowResult(true);
     numberOfAnswer();
   }
-
-  // reset state
+  //reset state
   function restart() {
     setFirstPage(false);
     setShowResult(false);
     setNumOfCorrectAnswer(0);
-    fetchData();
+    refetch();
     // setQuestion([])
   }
-
   function updateAnswer(currentQuestion, answer) {
-    setQuestion(
-      question.map((questionObject) => {
+      fetchData.map((questionObject) => {
         // if it is the question being answered, update its selected answer
         return questionObject.question === currentQuestion
           ? { ...questionObject, selectedAnswer: answer }
           : questionObject;
       })
-    );
   }
-
   function createQuiz() {
     const submit = (
       <div className="welcome">
         {showResult ? (
           <div>
             <span>
-              You scored {numOfCorrectAnswer}/{question.length} correct answers
+              You scored {numOfCorrectAnswer}/{fetchData.length} correct answers
             </span>{" "}
             <button className="welcome_button" onClick={restart}>
               Play Again
@@ -124,18 +101,17 @@ function App() {
         )}
       </div>
     );
-    const quizComponents = question.map((quiz, index) => (
-      // console.log(quiz.answer[3]),
+    const quizComponents = fetchData.map((quiz) => (
       <Second
-        key={question.id}
-        question={quiz.question}
-        correctAnswer={quiz.correctAnswer}
-        answers={quiz.answers}
-        selectedAnswer={quiz.selectedAnswer}
-        updateAnswer={updateAnswer}
-        showResult={showResult}
-        checkanswers={showResult}
-        // onAnswerChange={(selectedAnswer) => handleAnswerChange(question.id, selectedAnswer)}
+      key={quiz.id}
+      question={quiz.question}
+      correctAnswer={quiz.correctAnswer}
+      answers={quiz.answers}
+      selectedAnswer={quiz.selectedAnswer}
+      updateAnswer={updateAnswer}
+      showResult={showResult}
+      checkanswers={showResult}
+      // onAnswerChange={(selectedAnswer) => handleAnswerChange(fetchData.id, selectedAnswer)}
       />
     ));
     return [<div className="bag">{quizComponents}</div>, submit];
@@ -146,12 +122,10 @@ function App() {
   }
   return (
     <div className="wrapper">
-      <QueryClientProvider>
       <div className="container">
-        <Header/>
+        <Header />
         {firstPage ? createQuiz() : <Main changePage={changePage} />}
       </div>
-    </QueryClientProvider>
     </div>
   );
 }

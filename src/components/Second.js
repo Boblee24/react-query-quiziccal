@@ -9,6 +9,7 @@ export default function Second(props){
     // }
     const handleAnswerClick = (answer, currentQuestion) => {
         props.updateAnswer(currentQuestion, answer);
+        console.log(props.correctAnswer)
      };
     
     // console.log(selectedAnswer)
